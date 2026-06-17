@@ -8,11 +8,11 @@ tri par défaut = date d'observation décroissante).
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any
 
 import aiohttp
-import async_timeout
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class HubeauClient:
 
     async def _request(self, url: str, params: dict[str, Any]) -> dict[str, Any]:
         try:
-            async with async_timeout.timeout(TIMEOUT):
+            async with asyncio.timeout(TIMEOUT):
                 resp = await self._session.get(url, params=params)
                 if resp.status == 400:
                     body = await resp.text()

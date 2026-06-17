@@ -254,14 +254,11 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> HubeauOptionsFlow:
-        return HubeauOptionsFlow(config_entry)
+        return HubeauOptionsFlow()
 
 
 class HubeauOptionsFlow(config_entries.OptionsFlow):
     """Permet de modifier l'intervalle de rafraîchissement."""
-
-    def __init__(self, config_entry: ConfigEntry) -> None:
-        self._config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -269,7 +266,7 @@ class HubeauOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(data=user_input)
 
-        current = self._config_entry.options.get(
+        current = self.config_entry.options.get(
             CONF_SCAN_INTERVAL_HOURS, DEFAULT_SCAN_INTERVAL_HOURS
         )
         schema = vol.Schema(
