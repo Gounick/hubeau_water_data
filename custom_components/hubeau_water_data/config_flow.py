@@ -70,6 +70,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             selected = user_input.get(CONF_THEMES, [])
+            _LOGGER.info("Thèmes sélectionnés: %s", selected)
             if not selected:
                 errors["base"] = "no_theme_selected"
             else:
@@ -172,6 +173,14 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         current_theme = self._station_themes_pending[0]
         theme = THEMES[current_theme]
 
+        _LOGGER.info("Début recherche de stations pour thème %s", current_theme)
+        _LOGGER.debug(
+            "Latitude: %s, Longitude: %s, Radius: %s",
+            self._data[CONF_LATITUDE],
+            self._data[CONF_LONGITUDE],
+            self._data[CONF_RADIUS_KM],
+        )
+
         try:
             session = async_get_clientsession(self.hass)
             client = HubeauClient(session)
@@ -182,6 +191,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._data[CONF_LONGITUDE],
                 self._data[CONF_RADIUS_KM],
             )
+            _LOGGER.info("Recherche de stations terminée, %d stations trouvées", len(nearby))
         except Exception:
             _LOGGER.exception("Erreur lors de la recherche de stations pour %s", current_theme)
             errors["base"] = "station_search_failed"
