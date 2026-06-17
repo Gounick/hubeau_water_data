@@ -30,9 +30,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
-def _build_location_params(
-    theme_key: str, entry: ConfigEntry
-) -> tuple[dict, str] | None:
+def _build_location_params(theme_key: str, entry: ConfigEntry) -> tuple[dict, str] | None:
     """Construit les paramètres de requête de localisation pour un thème.
 
     Renvoie (params, label) où label sert à différencier les coordinators
@@ -67,9 +65,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     session = async_get_clientsession(hass)
     client = HubeauClient(session)
 
-    scan_interval_hours = entry.options.get(
-        CONF_SCAN_INTERVAL_HOURS, DEFAULT_SCAN_INTERVAL_HOURS
-    )
+    scan_interval_hours = entry.options.get(CONF_SCAN_INTERVAL_HOURS, DEFAULT_SCAN_INTERVAL_HOURS)
     update_interval = timedelta(hours=scan_interval_hours)
 
     coordinators: dict[str, HubeauThemeCoordinator] = {}
@@ -77,9 +73,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     for theme_key in entry.data.get(CONF_THEMES, []):
         built = _build_location_params(theme_key, entry)
         if built is None:
-            _LOGGER.warning(
-                "Thème %s ignoré : aucune localisation valide configurée", theme_key
-            )
+            _LOGGER.warning("Thème %s ignoré : aucune localisation valide configurée", theme_key)
             continue
         location_params, location_label = built
 

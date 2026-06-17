@@ -67,9 +67,7 @@ class HubeauThemeCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             try:
                 rows = await self._client.async_get(endpoint, params)
             except HubeauApiError as err:
-                raise UpdateFailed(
-                    f"Erreur API Hub'Eau ({theme['name']} / {metric['name']}): {err}"
-                ) from err
+                raise UpdateFailed(f"Erreur API Hub'Eau ({theme['name']} / {metric['name']}): {err}") from err
 
             latest = self._pick_latest(rows, date_field)
             results_by_metric[metric["key"]] = latest
@@ -88,9 +86,8 @@ class HubeauThemeCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             try:
                 rows = await self._client.async_get(endpoint, params)
             except HubeauApiError as err:
-                raise UpdateFailed(
-                    f"Erreur API Hub'Eau ({theme['name']} / conformité): {err}"
-                ) from err
+                _LOGGER.exception("Erreur API Hub'Eau (%s / conformité)", theme["name"])
+                raise UpdateFailed(f"Erreur API Hub'Eau ({theme['name']} / conformité): {err}") from err
             conformity = self._pick_latest(rows, date_field)
 
         return {
@@ -99,9 +96,7 @@ class HubeauThemeCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         }
 
     @staticmethod
-    def _pick_latest(
-        rows: list[dict[str, Any]], date_field: str | None
-    ) -> dict[str, Any] | None:
+    def _pick_latest(rows: list[dict[str, Any]], date_field: str | None) -> dict[str, Any] | None:
         """Sélectionne la ligne la plus récente d'une liste de résultats.
 
         Si l'API trie déjà par date décroissante (sort=desc ou ordre par

@@ -532,3 +532,8 @@ ATTR_CODE_STATION = "code_station"
 ATTR_CONFORMITE_BACT = "conformite_bact"
 ATTR_CONFORMITE_PC = "conformite_pc"
 ATTR_CODE_PRELEVEMENT = "code_prelevement"
+
+# ---------------------------------------------------------------------------
+# Configuration API
+# ---------------------------------------------------------------------------
+API_TIMEOUT_SECONDS = 30

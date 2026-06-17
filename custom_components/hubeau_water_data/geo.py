@@ -42,12 +42,8 @@ async def async_find_nearby_stations(
 
     try:
         rows = await client.async_get(endpoint, params)
-    except HubeauApiError as err:
-        _LOGGER.warning(
-            "Recherche de stations à proximité impossible pour %s: %s",
-            theme_key,
-            err,
-        )
+    except HubeauApiError:
+        _LOGGER.exception("Recherche de stations à proximité impossible pour %s", theme_key)
         return []
 
     stations: list[dict[str, str]] = []

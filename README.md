@@ -72,6 +72,58 @@ commune ou point d'intérêt) si vous souhaitez suivre plusieurs lieux.
 L'intervalle de rafraîchissement se modifie ensuite via le bouton
 **Options** de l'intégration.
 
+## Tests
+
+Cette intégration inclut une suite de tests unitaires pour assurer la qualité du code.
+
+### Exécution des tests avec UV
+
+```bash
+# Installer les dépendances de développement
+uv sync --extra dev
+
+# Exécuter tous les tests
+uv run pytest
+
+# Exécuter avec coverage
+uv run pytest --cov=custom_components/hubeau_water_data --cov-report=html
+
+# Exécuter uniquement les tests unitaires
+uv run pytest -m unit
+```
+
+### Exécution des tests avec pip
+
+```bash
+# Installer les dépendances de test
+pip install -r requirements-test.txt
+
+# Exécuter les tests
+pytest
+
+# Exécuter avec coverage
+pytest --cov=custom_components/hubeau_water_data --cov-report=html
+```
+
+### Couverture des tests
+
+Les tests couvrent les modules critiques de l'intégration :
+
+- **api.py** : Client HTTP, gestion des erreurs, validation des réponses
+- **coordinator.py** : Coordinateur de mise à jour, récupération des données
+- **geo.py** : Recherche de stations à proximité
+
+Actuellement, **26 tests unitaires** sont disponibles.
+
+### Outils utilisés
+
+- **pytest** : Framework de tests
+- **pytest-asyncio** : Support des tests asynchrones
+- **pytest-cov** : Génération des rapports de couverture
+- **pytest-homeassistant-custom-component** : Mocks pour Home Assistant
+- **ruff** : Linter et formateur Python
+- **black** : Formateur de code Python
+
 ## Limites connues
 
 - Les données Hub'Eau ont des fréquences de mise à jour très variables

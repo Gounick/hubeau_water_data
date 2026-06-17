@@ -6,7 +6,6 @@ import logging
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback
@@ -37,9 +36,7 @@ _LOGGER = logging.getLogger(__name__)
 
 # Endpoint Hub'Eau "communes_udi" utilisé uniquement pour vérifier la
 # validité d'un code commune (réutilisé de la v1 eau potable)
-VERIF_COMMUNE_URL = (
-    "https://hubeau.eaufrance.fr/api/v1/qualite_eau_potable/communes_udi"
-)
+VERIF_COMMUNE_URL = "https://hubeau.eaufrance.fr/api/v1/qualite_eau_potable/communes_udi"
 
 
 def _theme_options() -> list[selector.SelectOptionDict]:
@@ -68,9 +65,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # ------------------------------------------------------------------
     # Étape 1 : sélection des thématiques
     # ------------------------------------------------------------------
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> config_entries.FlowResult:
         errors: dict[str, str] = {}
 
         if user_input is not None:
@@ -97,13 +92,9 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # ------------------------------------------------------------------
     # Étape 2 : localisation (commune + coordonnées GPS pour les stations)
     # ------------------------------------------------------------------
-    async def async_step_location(
-        self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    async def async_step_location(self, user_input: dict[str, Any] | None = None) -> config_entries.FlowResult:
         errors: dict[str, str] = {}
-        needs_station_search = any(
-            THEMES[t]["localisation"] == LOC_STATION for t in self._data[CONF_THEMES]
-        )
+        needs_station_search = any(THEMES[t]["localisation"] == LOC_STATION for t in self._data[CONF_THEMES])
 
         if user_input is not None:
             code_commune = user_input.get(CONF_CODE_COMMUNE, "").strip()
@@ -114,10 +105,13 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 session = async_get_clientsession(self.hass)
                 client = HubeauClient(session)
                 try:
-                    rows = await client.async_get(
-                        VERIF_COMMUNE_URL, {"code_commune": code_commune, "size": 1}
+                    rows = await client.async_get(VERIF_COMMUNE_URL, {"code_commune": code_commune, "size": 1})
+                except HubeauApiError as err:
+                    _LOGGER.warning(
+                        "Impossible de vérifier le code commune %s: %s",
+                        code_commune,
+                        err,
                     )
-                except HubeauApiError:
                     rows = []
                 if rows:
                     nom_commune = rows[0].get("nom_commune", code_commune)
@@ -127,20 +121,15 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._data[CONF_CODE_DEPARTEMENT] = code_departement or code_commune[:2]
             self._data[CONF_LATITUDE] = user_input.get(CONF_LATITUDE)
             self._data[CONF_LONGITUDE] = user_input.get(CONF_LONGITUDE)
-            self._data[CONF_RADIUS_KM] = user_input.get(
-                CONF_RADIUS_KM, DEFAULT_RADIUS_KM
-            )
+            self._data[CONF_RADIUS_KM] = user_input.get(CONF_RADIUS_KM, DEFAULT_RADIUS_KM)
 
             if needs_station_search and (
-                self._data.get(CONF_LATITUDE) is None
-                or self._data.get(CONF_LONGITUDE) is None
+                self._data.get(CONF_LATITUDE) is None or self._data.get(CONF_LONGITUDE) is None
             ):
                 errors["base"] = "gps_required_for_stations"
             else:
                 self._station_themes_pending = [
-                    t
-                    for t in self._data[CONF_THEMES]
-                    if THEMES[t]["localisation"] == LOC_STATION
+                    t for t in self._data[CONF_THEMES] if THEMES[t]["localisation"] == LOC_STATION
                 ]
                 if self._station_themes_pending:
                     return await self.async_step_station()
@@ -151,32 +140,22 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             vol.Optional(CONF_CODE_DEPARTEMENT, default=""): str,
         }
         lat_selector = selector.NumberSelector(
-            selector.NumberSelectorConfig(
-                min=-90, max=90, step=0.00001, mode=selector.NumberSelectorMode.BOX
-            )
+            selector.NumberSelectorConfig(min=-90, max=90, step=0.00001, mode=selector.NumberSelectorMode.BOX)
         )
         lon_selector = selector.NumberSelector(
-            selector.NumberSelectorConfig(
-                min=-180, max=180, step=0.00001, mode=selector.NumberSelectorMode.BOX
-            )
+            selector.NumberSelectorConfig(min=-180, max=180, step=0.00001, mode=selector.NumberSelectorMode.BOX)
         )
         radius_selector = selector.NumberSelector(
-            selector.NumberSelectorConfig(
-                min=1, max=200, step=1, mode=selector.NumberSelectorMode.BOX
-            )
+            selector.NumberSelectorConfig(min=1, max=200, step=1, mode=selector.NumberSelectorMode.BOX)
         )
         if needs_station_search:
             schema_dict[vol.Required(CONF_LATITUDE)] = lat_selector
             schema_dict[vol.Required(CONF_LONGITUDE)] = lon_selector
-            schema_dict[vol.Optional(CONF_RADIUS_KM, default=DEFAULT_RADIUS_KM)] = (
-                radius_selector
-            )
+            schema_dict[vol.Optional(CONF_RADIUS_KM, default=DEFAULT_RADIUS_KM)] = radius_selector
         else:
             schema_dict[vol.Optional(CONF_LATITUDE)] = lat_selector
             schema_dict[vol.Optional(CONF_LONGITUDE)] = lon_selector
-            schema_dict[vol.Optional(CONF_RADIUS_KM, default=DEFAULT_RADIUS_KM)] = (
-                radius_selector
-            )
+            schema_dict[vol.Optional(CONF_RADIUS_KM, default=DEFAULT_RADIUS_KM)] = radius_selector
 
         return self.async_show_form(
             step_id="location",
@@ -188,9 +167,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # ------------------------------------------------------------------
     # Étape 3 : sélection de station pour chaque thème géolocalisé
     # ------------------------------------------------------------------
-    async def async_step_station(
-        self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    async def async_step_station(self, user_input: dict[str, Any] | None = None) -> config_entries.FlowResult:
         errors: dict[str, str] = {}
         current_theme = self._station_themes_pending[0]
         theme = THEMES[current_theme]
@@ -226,19 +203,12 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return await self.async_step_station()
                 return self._finish()
 
-        options = [
-            selector.SelectOptionDict(
-                value=s["code"], label=f"{s['name']} ({s['code']})"
-            )
-            for s in nearby
-        ]
+        options = [selector.SelectOptionDict(value=s["code"], label=f"{s['name']} ({s['code']})") for s in nearby]
 
         schema_dict: dict[Any, Any] = {}
         if options:
             schema_dict[vol.Optional("station_code")] = selector.SelectSelector(
-                selector.SelectSelectorConfig(
-                    options=options, mode=selector.SelectSelectorMode.DROPDOWN
-                )
+                selector.SelectSelectorConfig(options=options, mode=selector.SelectSelectorMode.DROPDOWN)
             )
         schema_dict[vol.Optional("manual_code", default="")] = str
 
@@ -274,23 +244,15 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class HubeauOptionsFlow(config_entries.OptionsFlow):
     """Permet de modifier l'intervalle de rafraîchissement."""
 
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> config_entries.FlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
 
-        current = self.config_entry.options.get(
-            CONF_SCAN_INTERVAL_HOURS, DEFAULT_SCAN_INTERVAL_HOURS
-        )
+        current = self.config_entry.options.get(CONF_SCAN_INTERVAL_HOURS, DEFAULT_SCAN_INTERVAL_HOURS)
         schema = vol.Schema(
             {
-                vol.Required(
-                    CONF_SCAN_INTERVAL_HOURS, default=current
-                ): selector.NumberSelector(
-                    selector.NumberSelectorConfig(
-                        min=1, max=168, step=1, mode=selector.NumberSelectorMode.BOX
-                    )
+                vol.Required(CONF_SCAN_INTERVAL_HOURS, default=current): selector.NumberSelector(
+                    selector.NumberSelectorConfig(min=1, max=168, step=1, mode=selector.NumberSelectorMode.BOX)
                 ),
             }
         )
