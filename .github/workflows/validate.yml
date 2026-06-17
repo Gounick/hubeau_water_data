@@ -24,4 +24,4 @@ jobs:
     name: Hassfest validation
     steps:
       - uses: actions/checkout@v4
-      - uses: home-assistant/actions/hassfest@stable
+      - uses: home-assistant/actions/hassfest@v1.0.0
