@@ -172,7 +172,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="location",
             data_schema=vol.Schema(schema_dict),
             errors=errors,
-            description_placeholders={"exemple": "44021 (Blain)"},
+            description_placeholders={"exemple": "75101 (Paris 1er arrondissement)"},
         )
 
     # ------------------------------------------------------------------

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 
-DOMAIN = "hubeau_water_quality"
+DOMAIN = "hubeau_water_data"
 
 # ---------------------------------------------------------------------------
 # Modes de localisation
