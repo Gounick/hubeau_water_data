@@ -1,4 +1,5 @@
 """Recherche de stations Hub'Eau à proximité d'un point GPS."""
+
 from __future__ import annotations
 
 import logging

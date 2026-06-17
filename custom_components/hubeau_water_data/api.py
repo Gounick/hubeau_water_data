@@ -6,6 +6,7 @@ utilise un curseur, mais qui se comporte correctement même sans curseur
 pour une simple lecture de la page la plus récente (cf. constat empirique :
 tri par défaut = date d'observation décroissante).
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -44,12 +45,20 @@ class HubeauClient:
                 resp = await self._session.get(url, params=params)
                 if resp.status == 400:
                     body = await resp.text()
-                    raise HubeauApiError(f"Requête invalide ({resp.status}) sur {url}: {body}")
+                    raise HubeauApiError(
+                        f"Requête invalide ({resp.status}) sur {url}: {body}"
+                    )
                 if resp.status >= 500:
-                    raise HubeauApiError(f"Erreur serveur Hub'Eau ({resp.status}) sur {url}")
+                    raise HubeauApiError(
+                        f"Erreur serveur Hub'Eau ({resp.status}) sur {url}"
+                    )
                 resp.raise_for_status()
                 return await resp.json()
         except aiohttp.ClientError as err:
-            raise HubeauApiError(f"Erreur de connexion à Hub'Eau ({url}): {err}") from err
+            raise HubeauApiError(
+                f"Erreur de connexion à Hub'Eau ({url}): {err}"
+            ) from err
         except TimeoutError as err:
-            raise HubeauApiError(f"Délai d'attente dépassé en contactant Hub'Eau ({url})") from err
+            raise HubeauApiError(
+                f"Délai d'attente dépassé en contactant Hub'Eau ({url})"
+            ) from err

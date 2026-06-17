@@ -1,4 +1,5 @@
 """Coordinator générique Hub'Eau, piloté par le registre THEMES."""
+
 from __future__ import annotations
 
 import logging

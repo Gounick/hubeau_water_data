@@ -1,4 +1,5 @@
 """Capteurs Hub'Eau, générés dynamiquement à partir du registre THEMES."""
+
 from __future__ import annotations
 
 import logging
@@ -38,7 +39,9 @@ async def async_setup_entry(
             entities.append(HubeauMetricSensor(coordinator, theme_key, metric))
         if "conformity_metric" in theme:
             entities.append(
-                HubeauConformitySensor(coordinator, theme_key, theme["conformity_metric"])
+                HubeauConformitySensor(
+                    coordinator, theme_key, theme["conformity_metric"]
+                )
             )
 
     async_add_entities(entities)
@@ -156,7 +159,9 @@ class HubeauConformitySensor(HubeauBaseSensor):
         super().__init__(coordinator, theme_key)
         self._metric = conformity_metric
         label = coordinator.safe_location_label
-        self._attr_unique_id = f"{DOMAIN}_{theme_key}_{label}_{conformity_metric['key']}"
+        self._attr_unique_id = (
+            f"{DOMAIN}_{theme_key}_{label}_{conformity_metric['key']}"
+        )
         self._attr_name = conformity_metric["name"]
 
     def _latest(self) -> dict[str, Any] | None:

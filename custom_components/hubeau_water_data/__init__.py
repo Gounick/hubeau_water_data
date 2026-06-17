@@ -1,4 +1,5 @@
 """Intégration Hub'Eau (13 thématiques)."""
+
 from __future__ import annotations
 
 import logging
@@ -29,7 +30,9 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
-def _build_location_params(theme_key: str, entry: ConfigEntry) -> tuple[dict, str] | None:
+def _build_location_params(
+    theme_key: str, entry: ConfigEntry
+) -> tuple[dict, str] | None:
     """Construit les paramètres de requête de localisation pour un thème.
 
     Renvoie (params, label) où label sert à différencier les coordinators
