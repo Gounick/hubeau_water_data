@@ -1,12 +1,12 @@
 """Tests pour le module geo.py."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 
 from custom_components.hubeau_water_data.api import HubeauApiError, HubeauClient
+from custom_components.hubeau_water_data.const import THEME_EAU_POTABLE, THEME_HYDROMETRIE, THEME_PIEZOMETRIE
 from custom_components.hubeau_water_data.geo import async_find_nearby_stations
-from custom_components.hubeau_water_data.const import THEME_PIEZOMETRIE, THEME_HYDROMETRIE, THEME_EAU_POTABLE
 
 
 @pytest.mark.unit
@@ -56,9 +56,7 @@ async def test_async_find_nearby_stations_no_endpoint():
 async def test_async_find_nearby_stations_api_error():
     """Test la gestion des erreurs API."""
     mock_client = AsyncMock(spec=HubeauClient)
-    mock_client.async_get = AsyncMock(
-        side_effect=HubeauApiError("API Error")
-    )
+    mock_client.async_get = AsyncMock(side_effect=HubeauApiError("API Error"))
 
     result = await async_find_nearby_stations(
         client=mock_client,

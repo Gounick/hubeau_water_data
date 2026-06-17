@@ -1,7 +1,5 @@
 """Tests pour le module coordinator.py."""
 
-from unittest.mock import MagicMock
-
 import pytest
 
 from custom_components.hubeau_water_data.coordinator import HubeauThemeCoordinator

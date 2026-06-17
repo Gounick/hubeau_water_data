@@ -172,15 +172,28 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         current_theme = self._station_themes_pending[0]
         theme = THEMES[current_theme]
 
-        session = async_get_clientsession(self.hass)
-        client = HubeauClient(session)
-        nearby = await async_find_nearby_stations(
-            client,
-            current_theme,
-            self._data[CONF_LATITUDE],
-            self._data[CONF_LONGITUDE],
-            self._data[CONF_RADIUS_KM],
-        )
+        try:
+            session = async_get_clientsession(self.hass)
+            client = HubeauClient(session)
+            nearby = await async_find_nearby_stations(
+                client,
+                current_theme,
+                self._data[CONF_LATITUDE],
+                self._data[CONF_LONGITUDE],
+                self._data[CONF_RADIUS_KM],
+            )
+        except Exception:
+            _LOGGER.exception("Erreur lors de la recherche de stations pour %s", current_theme)
+            errors["base"] = "station_search_failed"
+            return self.async_show_form(
+                step_id="station",
+                data_schema=vol.Schema({}),
+                errors=errors,
+                description_placeholders={
+                    "theme_name": theme["name"],
+                    "count": "0",
+                },
+            )
 
         if user_input is not None:
             chosen = user_input.get("station_code", "").strip()
