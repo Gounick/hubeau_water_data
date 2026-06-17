@@ -1,0 +1,86 @@
+# Dashboard Lovelace générique "Hub'Eau"
+# ---------------------------------------------------------------------------
+# Cette intégration crée un appareil Home Assistant par thématique activée
+# (ex. "Qualité de l'eau potable - 44021", "Piézométrie - 06252X0063/PZ1").
+#
+# Pour trouver les entity_id exacts à utiliser ci-dessous :
+#   Paramètres > Appareils et services > Hub'Eau > cliquez sur chaque
+#   appareil pour voir la liste de ses capteurs et leurs entity_id.
+#
+# Astuce rapide : dans une vue, ajoutez une carte "Zone" ou "Secteur" basée
+# sur l'appareil Hub'Eau concerné — Home Assistant générera automatiquement
+# une carte avec tous ses capteurs, sans avoir à connaître les entity_id.
+# ---------------------------------------------------------------------------
+
+type: vertical-stack
+cards:
+  # --- Eau potable : statut de conformité + paramètres physico-chimiques ---
+  - type: entities
+    title: Eau potable - Conformité
+    show_header_toggle: false
+    entities:
+      - entity: sensor.qualite_de_l_eau_potable_44021_conformite_du_dernier_prelevement
+        name: Conformité du dernier prélèvement
+
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: sensor
+        entity: sensor.qualite_de_l_eau_potable_44021_ph
+        name: pH
+        graph: line
+      - type: sensor
+        entity: sensor.qualite_de_l_eau_potable_44021_chlore_libre
+        name: Chlore libre
+        graph: line
+      - type: sensor
+        entity: sensor.qualite_de_l_eau_potable_44021_turbidite
+        name: Turbidité
+        graph: line
+      - type: sensor
+        entity: sensor.qualite_de_l_eau_potable_44021_nitrates
+        name: Nitrates
+        graph: line
+
+  # --- Piézométrie (à adapter avec votre code de station BSS) ---
+  - type: entities
+    title: Piézométrie
+    show_header_toggle: false
+    entities:
+      - entity: sensor.piezometrie_xxxxxxxx_niveau_de_la_nappe
+        name: Niveau de la nappe
+      - entity: sensor.piezometrie_xxxxxxxx_profondeur_de_la_nappe
+        name: Profondeur de la nappe
+
+  # --- Hydrométrie (à adapter avec votre code de station) ---
+  - type: entities
+    title: Hydrométrie
+    show_header_toggle: false
+    entities:
+      - entity: sensor.hydrometrie_xxxxxxxx_hauteur_d_eau
+        name: Hauteur d'eau
+      - entity: sensor.hydrometrie_xxxxxxxx_debit
+        name: Débit
+
+  # --- Indicateurs des services d'eau ---
+  - type: entities
+    title: Indicateurs du service d'eau
+    show_header_toggle: false
+    entities:
+      - entity: sensor.indicateurs_des_services_d_eau_44021_prix_du_service_d_eau_potable
+        name: Prix du service d'eau potable
+      - entity: sensor.indicateurs_des_services_d_eau_44021_rendement_du_reseau_de_distribution
+        name: Rendement du réseau
+
+  # --- Détails du dernier prélèvement eau potable (attributs) ---
+  - type: markdown
+    title: Détails du dernier prélèvement (eau potable)
+    content: >
+      **Commune :** {{ state_attr('sensor.qualite_de_l_eau_potable_44021_conformite_du_dernier_prelevement', 'nom_commune') }}
+
+      **Date du prélèvement :** {{ state_attr('sensor.qualite_de_l_eau_potable_44021_conformite_du_dernier_prelevement', 'date_mesure') }}
+
+      **Conformité bactériologique :** {{ state_attr('sensor.qualite_de_l_eau_potable_44021_conformite_du_dernier_prelevement', 'conformite_limites_bact_prelevement') }}
+
+      **Conformité physico-chimique :** {{ state_attr('sensor.qualite_de_l_eau_potable_44021_conformite_du_dernier_prelevement', 'conformite_limites_pc_prelevement') }}

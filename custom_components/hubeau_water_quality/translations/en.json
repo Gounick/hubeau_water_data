@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Hub'Eau - Data selection",
+        "description": "Choose one or more Hub'Eau themes to integrate. You can add other themes later by creating a new integration entry.",
+        "data": {
+          "themes": "Hub'Eau themes"
+        }
+      },
+      "location": {
+        "title": "Location",
+        "description": "Enter your commune's INSEE code (e.g. {exemple}) for commune-based data. For station-based themes (piezometry, hydrometry, river temperature, groundwater quality, hydrobiology, coastal monitoring), enter your GPS coordinates and a search radius: the next step will suggest nearby stations.",
+        "data": {
+          "code_commune": "Commune INSEE code",
+          "code_departement": "Department code (auto-derived if empty)",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "radius_km": "Station search radius (km)"
+        }
+      },
+      "station": {
+        "title": "Station selection — {theme_name}",
+        "description": "{count} station(s) found within the chosen radius. Pick one from the list, or enter a known Hub'Eau station code directly.",
+        "data": {
+          "station_code": "Nearby station",
+          "manual_code": "Or manual station code"
+        }
+      }
+    },
+    "error": {
+      "no_theme_selected": "Please select at least one theme.",
+      "gps_required_for_stations": "GPS coordinates are required to search for nearby stations.",
+      "station_required": "Please choose a station from the list or enter a code manually."
+    },
+    "abort": {
+      "already_configured": "This configuration already exists."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options - Hub'Eau",
+        "data": {
+          "scan_interval_hours": "Refresh interval (hours)"
+        }
+      }
+    }
+  }
+}

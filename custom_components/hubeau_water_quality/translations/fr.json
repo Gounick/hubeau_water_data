@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Hub'Eau - Sélection des données",
+        "description": "Choisissez une ou plusieurs thématiques Hub'Eau à intégrer. Vous pourrez ajouter les autres thématiques plus tard en ajoutant une nouvelle intégration.",
+        "data": {
+          "themes": "Thématiques Hub'Eau"
+        }
+      },
+      "location": {
+        "title": "Localisation",
+        "description": "Indiquez le code INSEE de votre commune (ex. {exemple}) pour les données par commune. Pour les thématiques par station (piézométrie, hydrométrie, température des cours d'eau, qualité des nappes, hydrobiologie, littoral), indiquez vos coordonnées GPS et un rayon de recherche : l'étape suivante vous proposera les stations les plus proches.",
+        "data": {
+          "code_commune": "Code INSEE de la commune",
+          "code_departement": "Code département (auto-déduit si vide)",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "radius_km": "Rayon de recherche des stations (km)"
+        }
+      },
+      "station": {
+        "title": "Sélection de station — {theme_name}",
+        "description": "{count} station(s) trouvée(s) dans le rayon choisi. Sélectionnez-en une dans la liste, ou saisissez directement un code de station Hub'Eau connu.",
+        "data": {
+          "station_code": "Station à proximité",
+          "manual_code": "Ou code de station manuel"
+        }
+      }
+    },
+    "error": {
+      "no_theme_selected": "Veuillez sélectionner au moins une thématique.",
+      "gps_required_for_stations": "Les coordonnées GPS sont requises pour rechercher des stations à proximité.",
+      "station_required": "Veuillez choisir une station dans la liste ou saisir un code manuellement."
+    },
+    "abort": {
+      "already_configured": "Cette configuration existe déjà."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options - Hub'Eau",
+        "data": {
+          "scan_interval_hours": "Intervalle de rafraîchissement (heures)"
+        }
+      }
+    }
+  }
+}
