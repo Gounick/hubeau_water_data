@@ -1,7 +1,7 @@
 {
-  "name": "Hub'Eau - Données sur l'eau",
+  "name": "Qualité de l'eau potable (Hub'Eau)",
   "render_readme": true,
   "homeassistant": "2024.1.0",
   "zip_release": false,
-  "filename": "hubeau_water_data.zip"
+  "filename": "hubeau_water_quality.zip"
 }

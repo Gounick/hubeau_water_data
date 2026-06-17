@@ -1,5 +1,5 @@
 {
-  "domain": "hubeau_water_data",
+  "domain": "hubeau_water_quality",
   "name": "Hub'Eau - Données sur l'eau",
   "codeowners": ["@gokukan"],
   "config_flow": true,

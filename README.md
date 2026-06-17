@@ -51,7 +51,7 @@ Aucune clé API n'est requise : toutes les API Hub'Eau sont publiques et gratuit
 
 ### Manuelle
 
-Copiez le dossier `custom_components/hubeau_water_data` dans le dossier
+Copiez le dossier `custom_components/hubeau_water_quality` dans le dossier
 `custom_components` de votre installation Home Assistant, puis redémarrez.
 
 ## Configuration
