@@ -33,6 +33,7 @@ from .const import (
 from .geo import async_find_nearby_stations
 
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info("Module config_flow chargé - version 2.0.3")
 
 # Endpoint Hub'Eau "communes_udi" utilisé uniquement pour vérifier la
 # validité d'un code commune (réutilisé de la v1 eau potable)
@@ -40,6 +41,7 @@ VERIF_COMMUNE_URL = "https://hubeau.eaufrance.fr/api/v1/qualite_eau_potable/comm
 
 
 def _theme_options() -> list[selector.SelectOptionDict]:
+    _LOGGER.info("Génération des options de thèmes")
     options = []
     for key in ALL_THEMES:
         theme = THEMES[key]
@@ -47,6 +49,7 @@ def _theme_options() -> list[selector.SelectOptionDict]:
         if theme.get("deprecated"):
             label += " (⚠️ API en cours de fermeture par Hub'Eau)"
         options.append(selector.SelectOptionDict(value=key, label=label))
+    _LOGGER.info("%d options de thèmes générées", len(options))
     return options
 
 
@@ -66,6 +69,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # Étape 1 : sélection des thématiques
     # ------------------------------------------------------------------
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> config_entries.FlowResult:
+        _LOGGER.info("async_step_user appelé, user_input: %s", user_input)
         errors: dict[str, str] = {}
 
         if user_input is not None:
@@ -77,6 +81,7 @@ class HubeauConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._data[CONF_THEMES] = selected
                 return await self.async_step_location()
 
+        _LOGGER.info("Affichage du formulaire de sélection des thèmes")
         schema = vol.Schema(
             {
                 vol.Required(CONF_THEMES): selector.SelectSelector(

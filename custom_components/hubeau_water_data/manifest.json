@@ -1,12 +1,12 @@
 {
   "domain": "hubeau_water_data",
   "name": "Hub'Eau - Données sur l'eau",
-  "codeowners": ["@gokukan"],
+  "codeowners": ["@Gounick"],
   "config_flow": true,
   "documentation": "https://github.com/Gounick/hubeau_water_data/blob/main/README.md",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/Gounick/hubeau_water_data/issues",
   "requirements": [],
-  "version": "2.0.3"
+  "version": "2.0.4"
 }
