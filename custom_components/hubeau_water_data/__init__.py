@@ -26,6 +26,7 @@ from .const import (
 from .coordinator import HubeauThemeCoordinator
 
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info("Module __init__ chargé - version 2.0.4")
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
